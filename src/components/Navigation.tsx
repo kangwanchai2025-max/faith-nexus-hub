@@ -20,10 +20,10 @@ const Navigation = () => {
   const location = useLocation();
 
   const navItems = [
-    { path: "/", label: "Prayers", icon: Heart },
-    { path: "/groups", label: "Care Groups", icon: Users },
-    { path: "/calendar", label: "Calendar", icon: Calendar },
-    { path: "/profile", label: "Profile", icon: User },
+    { path: "/", label: "คำอธิษฐาน", icon: Heart },
+    { path: "/groups", label: "กลุ่มดูแล", icon: Users },
+    { path: "/calendar", label: "ปฏิทิน", icon: Calendar },
+    { path: "/profile", label: "โปรไฟล์", icon: User },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -39,9 +39,9 @@ const Navigation = () => {
             </div>
             <div>
               <h1 className="text-xl font-serif font-semibold bg-gradient-divine bg-clip-text text-transparent">
-                Nexus
+                เน็กซัส
               </h1>
-              <p className="text-xs text-muted-foreground">Prayer Community</p>
+              <p className="text-xs text-muted-foreground">ชุมชนแห่งการอธิษฐาน</p>
             </div>
           </Link>
           
@@ -71,7 +71,7 @@ const Navigation = () => {
           <Link to="/new-prayer">
             <Button variant="divine" size="sm">
               <Plus className="w-4 h-4" />
-              New Prayer
+              คำอธิษฐานใหม่
             </Button>
           </Link>
           
@@ -96,7 +96,7 @@ const Navigation = () => {
               <Heart className="w-4 h-4 text-primary-foreground" />
             </div>
             <span className="font-serif font-semibold bg-gradient-divine bg-clip-text text-transparent">
-              Nexus
+              เน็กซัส
             </span>
           </Link>
           
@@ -136,7 +136,7 @@ const Navigation = () => {
                 <Link to="/new-prayer" onClick={() => setIsOpen(false)}>
                   <Button variant="divine" className="w-full">
                     <Plus className="w-4 h-4" />
-                    New Prayer
+                    คำอธิษฐานใหม่
                   </Button>
                 </Link>
               </div>

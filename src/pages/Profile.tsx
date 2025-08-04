@@ -23,15 +23,15 @@ import {
 
 // Sample user data
 const userData = {
-  name: "Sarah Johnson",
+  name: "ซาร่าห์ จอห์นสัน",
   email: "sarah.johnson@email.com",
   phone: "+1 (555) 123-4567",
   avatar: "/api/placeholder/120/120",
-  role: "Care Group Leader",
-  careGroup: "Young Adults Ministry",
-  joinDate: "January 2023",
-  location: "San Francisco, CA",
-  bio: "Passionate about serving God and building meaningful relationships within our community. Love leading worship and organizing community outreach events.",
+  role: "หัวหน้ากลุ่มดูแล",
+  careGroup: "กลุ่มเยาวชน",
+  joinDate: "มกราคม 2566",
+  location: "ซานฟรานซิสโก, แคลิฟอร์เนีย",
+  bio: "หลงใหลในการรับใช้พระเจ้าและสร้างความสัมพันธ์ที่มีความหมายภายในชุมชนของเรา รักการนำการนมัสการและการจัดกิจกรรมเพื่อชุมชน",
   stats: {
     prayersShared: 47,
     prayersAnswered: 23,
@@ -43,32 +43,32 @@ const userData = {
 const recentPrayers = [
   {
     id: 1,
-    title: "Thanksgiving for New Job",
+    title: "ขอบคุณพระคุณสำหรับงานใหม่",
     status: "answered",
-    date: "2 days ago",
-    category: "Gratitude"
+    date: "2 วันที่แล้ว",
+    category: "ความกตัญญู"
   },
   {
     id: 2,
-    title: "Healing for Mom's Surgery",
+    title: "การรักษาสำหรับการผ่าตัดของแม่",
     status: "ongoing",
-    date: "1 week ago",
-    category: "Health"
+    date: "1 สัปดาห์ที่แล้ว",
+    category: "สุขภาพ"
   },
   {
     id: 3,
-    title: "Wisdom in Decision Making",
+    title: "สติปัญญาในการตัดสินใจ",
     status: "ongoing",
-    date: "2 weeks ago",
-    category: "Guidance"
+    date: "2 สัปดาห์ที่แล้ว",
+    category: "การนำทาง"
   }
 ];
 
 const careGroupMembers = [
-  { name: "Michael Chen", role: "Member", avatar: "/api/placeholder/40/40" },
-  { name: "Jennifer Lopez", role: "Co-Leader", avatar: "/api/placeholder/40/40" },
-  { name: "David Kim", role: "Member", avatar: "/api/placeholder/40/40" },
-  { name: "Emily Rodriguez", role: "Member", avatar: "/api/placeholder/40/40" },
+  { name: "ไมเคิล เฉิน", role: "สมาชิก", avatar: "/api/placeholder/40/40" },
+  { name: "เจนนิเฟอร์ โลเปซ", role: "ผู้ช่วยหัวหน้า", avatar: "/api/placeholder/40/40" },
+  { name: "เดวิด คิม", role: "สมาชิก", avatar: "/api/placeholder/40/40" },
+  { name: "เอมิลี่ โรดริเกซ", role: "สมาชิก", avatar: "/api/placeholder/40/40" },
 ];
 
 const Profile = () => {
@@ -115,13 +115,13 @@ const Profile = () => {
                       <span>{userData.location}</span>
                       <span className="mx-2">•</span>
                       <Calendar className="w-4 h-4" />
-                      <span>Joined {userData.joinDate}</span>
+                      <span>เข้าร่วม {userData.joinDate}</span>
                     </div>
                   </div>
                   
                   <Button variant="secondary" size="sm" className="bg-white/20 text-primary-foreground hover:bg-white/30 border-white/30">
                     <Edit3 className="w-4 h-4" />
-                    Edit Profile
+                    แก้ไขโปรไฟล์
                   </Button>
                 </div>
               </div>
@@ -135,7 +135,7 @@ const Profile = () => {
             <CardContent className="p-4 text-center">
               <Heart className="w-6 h-6 text-pink-500 mx-auto mb-2" />
               <div className="text-2xl font-bold">{userData.stats.prayersShared}</div>
-              <div className="text-sm text-muted-foreground">Prayers Shared</div>
+              <div className="text-sm text-muted-foreground">คำอธิษฐานที่แบ่งปัน</div>
             </CardContent>
           </Card>
           
@@ -143,7 +143,7 @@ const Profile = () => {
             <CardContent className="p-4 text-center">
               <Star className="w-6 h-6 text-yellow-500 mx-auto mb-2" />
               <div className="text-2xl font-bold">{userData.stats.prayersAnswered}</div>
-              <div className="text-sm text-muted-foreground">Answered Prayers</div>
+              <div className="text-sm text-muted-foreground">คำอธิษฐานที่ได้รับการตอบ</div>
             </CardContent>
           </Card>
           
@@ -151,7 +151,7 @@ const Profile = () => {
             <CardContent className="p-4 text-center">
               <Users className="w-6 h-6 text-blue-500 mx-auto mb-2" />
               <div className="text-2xl font-bold">{userData.stats.groupsJoined}</div>
-              <div className="text-sm text-muted-foreground">Groups Joined</div>
+              <div className="text-sm text-muted-foreground">กลุ่มที่เข้าร่วม</div>
             </CardContent>
           </Card>
           
@@ -159,7 +159,7 @@ const Profile = () => {
             <CardContent className="p-4 text-center">
               <Calendar className="w-6 h-6 text-green-500 mx-auto mb-2" />
               <div className="text-2xl font-bold">{userData.stats.eventsAttended}</div>
-              <div className="text-sm text-muted-foreground">Events Attended</div>
+              <div className="text-sm text-muted-foreground">กิจกรรมที่เข้าร่วม</div>
             </CardContent>
           </Card>
         </div>
@@ -167,9 +167,9 @@ const Profile = () => {
         {/* Tabs Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="prayers">My Prayers</TabsTrigger>
-            <TabsTrigger value="group">Care Group</TabsTrigger>
+            <TabsTrigger value="overview">ภาพรวม</TabsTrigger>
+            <TabsTrigger value="prayers">คำอธิษฐานของฉัน</TabsTrigger>
+            <TabsTrigger value="group">กลุ่มดูแล</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -179,7 +179,7 @@ const Profile = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Award className="w-5 h-5 text-primary" />
-                    About Me
+                    เกี่ยวกับฉัน
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -202,20 +202,20 @@ const Profile = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-primary" />
-                    Prayer Journey
+                    การเดินทางในการอธิษฐาน
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
                     <div className="flex justify-between text-sm mb-2">
-                      <span>Monthly Goal Progress</span>
+                      <span>ความคืบหน้าเป้าหมายรายเดือน</span>
                       <span>23/30</span>
                     </div>
                     <Progress value={76} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-2">
-                      <span>Answered Prayer Rate</span>
+                      <span>อัตราการตอบคำอธิษฐาน</span>
                       <span>49%</span>
                     </div>
                     <Progress value={49} className="h-2" />
@@ -228,7 +228,7 @@ const Profile = () => {
           <TabsContent value="prayers" className="space-y-6">
             <Card className="bg-card/60 backdrop-blur-sm border-border/50">
               <CardHeader>
-                <CardTitle>Recent Prayer Requests</CardTitle>
+                <CardTitle>คำขอการอธิษฐานล่าสุด</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -248,7 +248,7 @@ const Profile = () => {
                         variant={prayer.status === 'answered' ? 'default' : 'secondary'}
                         className={prayer.status === 'answered' ? 'bg-green-500 hover:bg-green-600' : ''}
                       >
-                        {prayer.status === 'answered' ? 'Answered' : 'Ongoing'}
+                        {prayer.status === 'answered' ? 'ได้รับการตอบ' : 'กำลังดำเนินการ'}
                       </Badge>
                     </div>
                   ))}
@@ -263,10 +263,10 @@ const Profile = () => {
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2">
                     <Users className="w-5 h-5 text-primary" />
-                    {userData.careGroup} Members
+                    สมาชิก{userData.careGroup}
                   </CardTitle>
                   <Button variant="divine" size="sm">
-                    Manage Group
+                    จัดการกลุ่ม
                   </Button>
                 </div>
               </CardHeader>

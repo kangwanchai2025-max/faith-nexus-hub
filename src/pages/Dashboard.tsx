@@ -23,36 +23,36 @@ import heroImage from "@/assets/hero-prayer.jpg";
 const prayers = [
   {
     id: 1,
-    title: "Healing for Sarah's Recovery",
-    description: "Please pray for Sarah as she recovers from surgery. Asking for God's healing touch and swift recovery.",
-    author: "Michael Chen",
-    careGroup: "Young Adults",
-    timestamp: "2 hours ago",
-    category: "Health & Healing",
+    title: "การรักษาสำหรับการฟื้นตัวของซาร่าห์",
+    description: "โปรดอธิษฐานเพื่อซาร่าห์ขณะที่เธอฟื้นตัวจากการผ่าตัด ขอให้พระเจ้าทรงสัมผัสด้วยการรักษาและการฟื้นตัวอย่างรวดเร็ว",
+    author: "ไมเคิล เฉิน",
+    careGroup: "เยาวชน",
+    timestamp: "2 ชั่วโมงที่แล้ว",
+    category: "สุขภาพและการรักษา",
     urgent: true,
     prayerCount: 23,
     comments: 8
   },
   {
     id: 2,
-    title: "Wisdom for Job Decision",
-    description: "Seeking God's guidance as I consider a new job opportunity. Pray for clarity and wisdom in this decision.",
-    author: "Jennifer Lopez",
-    careGroup: "Professionals",
-    timestamp: "4 hours ago",
-    category: "Guidance",
+    title: "ขอสติปัญญาในการตัดสินใจเรื่องงาน",
+    description: "ขอการนำทางจากพระเจ้าขณะที่ฉันพิจารณาโอกาสงานใหม่ อธิษฐานขอความชัดเจนและสติปัญญาในการตัดสินใจนี้",
+    author: "เจนนิเฟอร์ โลเปซ",
+    careGroup: "ผู้ทำงาน",
+    timestamp: "4 ชั่วโมงที่แล้ว",
+    category: "การนำทาง",
     urgent: false,
     prayerCount: 15,
     comments: 5
   },
   {
     id: 3,
-    title: "Family Reconciliation",
-    description: "My family is going through a difficult time. Please pray for forgiveness, understanding, and restoration of our relationships.",
-    author: "David Kim",
-    careGroup: "Families",
-    timestamp: "6 hours ago",
-    category: "Family",
+    title: "การคืนดีในครอบครัว",
+    description: "ครอบครัวของฉันกำลังประสบปัญหาในช่วงยากลำบาก โปรดอธิษฐานเพื่อการให้อภัย ความเข้าใจ และการฟื้นฟูความสัมพันธ์ของเรา",
+    author: "เดวิด คิม",
+    careGroup: "ครอบครัว",
+    timestamp: "6 ชั่วโมงที่แล้ว",
+    category: "ครอบครัว",
     urgent: false,
     prayerCount: 31,
     comments: 12
@@ -60,9 +60,9 @@ const prayers = [
 ];
 
 const quickActions = [
-  { icon: Heart, label: "Share Prayer", color: "text-pink-500" },
-  { icon: Users, label: "Join Group", color: "text-blue-500" },
-  { icon: Calendar, label: "Prayer Meeting", color: "text-green-500" },
+  { icon: Heart, label: "แบ่งปันคำอธิษฐาน", color: "text-pink-500" },
+  { icon: Users, label: "เข้าร่วมกลุ่ม", color: "text-blue-500" },
+  { icon: Calendar, label: "การประชุมอธิษฐาน", color: "text-green-500" },
 ];
 
 const Dashboard = () => {
@@ -82,22 +82,18 @@ const Dashboard = () => {
           <div className="container mx-auto px-6">
             <div className="max-w-2xl animate-fade-in-up">
               <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-4 leading-tight">
-                United in
+                รวมใจใน
                 <span className="block bg-gradient-to-r from-primary-glow to-yellow-300 bg-clip-text text-transparent">
-                  Prayer
+                  การอธิษฐาน
                 </span>
               </h1>
               <p className="text-xl text-white/90 mb-8 leading-relaxed">
-                Join our community in lifting each other up through prayer, faith, and fellowship.
+                เข้าร่วมชุมชนของเราในการยกชูซึ่งกันและกันผ่านการอธิษฐาน ความเชื่อ และการเป็นเพื่อนเคียง
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="xl" variant="hero" className="animate-glow">
-                  <Heart className="w-5 h-5" />
-                  Share Your Prayer
-                </Button>
                 <Button size="xl" variant="peaceful">
                   <Users className="w-5 h-5" />
-                  Join a Care Group
+                  เข้าร่วมกลุ่มดูแล
                 </Button>
               </div>
             </div>
@@ -123,7 +119,7 @@ const Dashboard = () => {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
-              placeholder="Search prayers..."
+              placeholder="ค้นหาคำอธิษฐาน..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 bg-card/60 border-border/50"
@@ -131,16 +127,16 @@ const Dashboard = () => {
           </div>
           <Button variant="outline" size="default">
             <Filter className="w-4 h-4" />
-            Filter
+            กรอง
           </Button>
         </div>
 
         {/* Prayer Feed */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-serif font-semibold">Recent Prayer Requests</h2>
+            <h2 className="text-2xl font-serif font-semibold">คำขอการอธิษฐานล่าสุด</h2>
             <Badge variant="secondary" className="px-3 py-1">
-              {prayers.length} Active Prayers
+              {prayers.length} คำอธิษฐานที่ยังใช้งาน
             </Badge>
           </div>
 
@@ -153,7 +149,7 @@ const Dashboard = () => {
                       <CardTitle className="text-lg font-serif">{prayer.title}</CardTitle>
                       {prayer.urgent && (
                         <Badge variant="destructive" className="text-xs">
-                          Urgent
+                          ด่วน
                         </Badge>
                       )}
                     </div>
@@ -196,7 +192,7 @@ const Dashboard = () => {
                   
                   <Button size="sm" variant="divine">
                     <Star className="w-3 h-3" />
-                    Pray
+                    อธิษฐาน
                   </Button>
                 </div>
               </CardContent>
