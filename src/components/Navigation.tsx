@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -11,13 +11,52 @@ import {
   Bell,
   Settings,
   Menu,
-  X
+  X,
+  LogOut
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  // Auth state management
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "ข้อผิดพลาด",
+        description: "ไม่สามารถออกจากระบบได้",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "ออกจากระบบสำเร็จ",
+        description: "แล้วพบกันใหม่!",
+      });
+      navigate("/auth");
+    }
+  };
 
   const navItems = [
     { path: "/", label: "คำอธิษฐาน", icon: Heart },
@@ -85,6 +124,12 @@ const Navigation = () => {
           <Button variant="ghost" size="icon">
             <Settings className="w-4 h-4" />
           </Button>
+
+          {user && (
+            <Button variant="ghost" size="icon" onClick={handleLogout} title="ออกจากระบบ">
+              <LogOut className="w-4 h-4" />
+            </Button>
+          )}
         </div>
       </nav>
 

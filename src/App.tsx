@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import NewPrayer from "./pages/NewPrayer";
 import Calendar from "./pages/Calendar";
 import MemberManagement from "./pages/MemberManagement";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/new-prayer" element={<NewPrayer />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/groups" element={<MemberManagement />} />
+            <Route path="/auth" element={<Auth />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
