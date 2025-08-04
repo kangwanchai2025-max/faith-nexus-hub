@@ -23,47 +23,47 @@ import {
 const events = [
   {
     id: 1,
-    title: "Weekly Prayer Meeting",
+    title: "การประชุมอธิษฐานประจำสัปดาห์",
     date: new Date(),
-    time: "7:00 PM",
+    time: "19:00",
     type: "prayer",
-    location: "Main Sanctuary",
-    organizer: "Pastor Michael",
+    location: "ห้องประชุมใหญ่",
+    organizer: "อาจารย์สมชาย",
     attendees: 24,
-    recurring: "weekly"
+    recurring: "รายสัปดาห์"
   },
   {
     id: 2,
-    title: "Young Adults Care Group",
+    title: "กลุ่มดูแลคนหนุ่มสาว",
     date: addDays(new Date(), 2),
-    time: "6:30 PM",
+    time: "18:30",
     type: "caregroup",
-    location: "Room 203",
-    organizer: "Sarah Johnson",
+    location: "ห้อง 203",
+    organizer: "สุวรรณา แสงทอง",
     attendees: 12,
-    recurring: "weekly"
+    recurring: "รายสัปดาห์"
   },
   {
     id: 3,
-    title: "Community Outreach",
+    title: "งานเข้าถึงชุมชน",
     date: addDays(new Date(), 5),
-    time: "9:00 AM",
+    time: "09:00",
     type: "outreach",
-    location: "Downtown Park",
-    organizer: "David Kim",
+    location: "สวนสาธารณะกลางเมือง",
+    organizer: "ประยุทธ์ ใจดี",
     attendees: 18,
-    recurring: "monthly"
+    recurring: "รายเดือน"
   },
   {
     id: 4,
-    title: "Family Fellowship Dinner",
+    title: "งานเลี้ยงสามัคคีครอบครัว",
     date: addDays(new Date(), 7),
-    time: "6:00 PM",
+    time: "18:00",
     type: "fellowship",
-    location: "Fellowship Hall",
-    organizer: "Jennifer Lopez",
+    location: "ห้องประชุม",
+    organizer: "วิมลา สุขใจ",
     attendees: 45,
-    recurring: "monthly"
+    recurring: "รายเดือน"
   }
 ];
 
@@ -94,8 +94,8 @@ const Calendar = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-serif font-bold">Community Calendar</h1>
-            <p className="text-muted-foreground">Stay connected with prayer meetings and fellowship events</p>
+            <h1 className="text-3xl font-serif font-bold">ปฏิทินชุมชน</h1>
+            <p className="text-muted-foreground">ติดตามการประชุมอธิษฐานและกิจกรรมสามัคคี</p>
           </div>
           
           <div className="flex items-center gap-3">
@@ -119,7 +119,7 @@ const Calendar = () => {
             
             <Button variant="divine" size="default">
               <Plus className="w-4 h-4" />
-              Add Event
+              เพิ่มกิจกรรม
             </Button>
           </div>
         </div>
@@ -146,7 +146,7 @@ const Calendar = () => {
                       size="sm"
                       onClick={() => setViewDate(new Date())}
                     >
-                      Today
+                      วันนี้
                     </Button>
                     <Button
                       variant="ghost"
@@ -161,7 +161,7 @@ const Calendar = () => {
               
               <CardContent>
                 <div className="grid grid-cols-7 gap-1 mb-4">
-                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                  {['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'].map(day => (
                     <div key={day} className="h-10 flex items-center justify-center text-sm font-medium text-muted-foreground">
                       {day}
                     </div>
@@ -250,7 +250,7 @@ const Calendar = () => {
                               </div>
                               <div className="flex items-center gap-1">
                                 <Users className="w-3 h-3" />
-                                <span>{event.attendees} attending</span>
+                                <span>{event.attendees} คนเข้าร่วม</span>
                               </div>
                             </div>
                             <div className="mt-2">
@@ -266,7 +266,7 @@ const Calendar = () => {
                 ) : (
                   <div className="text-center py-8 text-muted-foreground">
                     <CalendarIcon className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                    <p>No events scheduled for this day</p>
+                    <p>ไม่มีกิจกรรมที่กำหนดไว้สำหรับวันนี้</p>
                   </div>
                 )}
               </CardContent>
@@ -275,14 +275,14 @@ const Calendar = () => {
             {/* Quick Stats */}
             <Card className="bg-card/60 backdrop-blur-sm border-border/50">
               <CardHeader>
-                <CardTitle className="text-lg">This Month</CardTitle>
+                <CardTitle className="text-lg">เดือนนี้</CardTitle>
               </CardHeader>
               
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Heart className="w-4 h-4 text-pink-500" />
-                    <span className="text-sm">Prayer Meetings</span>
+                    <span className="text-sm">การประชุมอธิษฐาน</span>
                   </div>
                   <Badge variant="secondary">4</Badge>
                 </div>
@@ -292,7 +292,7 @@ const Calendar = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4 text-blue-500" />
-                    <span className="text-sm">Care Groups</span>
+                    <span className="text-sm">กลุ่มดูแล</span>
                   </div>
                   <Badge variant="secondary">8</Badge>
                 </div>
@@ -302,7 +302,7 @@ const Calendar = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <CalendarIcon className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Fellowship Events</span>
+                    <span className="text-sm">กิจกรรมสามัคคี</span>
                   </div>
                   <Badge variant="secondary">3</Badge>
                 </div>

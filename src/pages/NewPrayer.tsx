@@ -33,27 +33,27 @@ interface PrayerFormData {
 }
 
 const categories = [
-  "Health & Healing",
-  "Family",
-  "Relationships",
-  "Work & Career",
-  "Guidance",
-  "Gratitude",
-  "Financial",
-  "Spiritual Growth",
-  "Community",
-  "Other"
+  "สุขภาพและการรักษา",
+  "ครอบครัว",
+  "ความสัมพันธ์",
+  "งานและอาชีพ",
+  "การชี้นำ",
+  "ความกตัญญู",
+  "การเงิน",
+  "การเติบโตฝ่ายวิญญาณ",
+  "ชุมชน",
+  "อื่นๆ"
 ];
 
 const careGroups = [
-  "Young Adults Ministry",
-  "Families",
-  "Professionals",
-  "Seniors",
-  "Students",
-  "New Members",
-  "Men's Group",
-  "Women's Group"
+  "กลุ่มคนหนุ่มสาว",
+  "กลุ่มครอบครัว",
+  "กลุ่มผู้ทำงาน",
+  "กลุ่มผู้สูงอายุ",
+  "กลุ่มนักเรียน",
+  "กลุ่มสมาชิกใหม่",
+  "กลุ่มผู้ชาย",
+  "กลุ่มผู้หญิง"
 ];
 
 const NewPrayer = () => {
@@ -75,8 +75,8 @@ const NewPrayer = () => {
     
     if (!formData.title.trim() || !formData.description.trim()) {
       toast({
-        title: "Missing Information",
-        description: "Please fill in both title and description.",
+        title: "ข้อมูลไม่ครบถ้วน",
+        description: "กรุณากรอกหัวข้อและรายละเอียดคำอธิษฐาน",
         variant: "destructive"
       });
       return;
@@ -87,8 +87,8 @@ const NewPrayer = () => {
     // Simulate API call
     setTimeout(() => {
       toast({
-        title: "Prayer Request Submitted",
-        description: "Your prayer request has been shared with the community.",
+        title: "ส่งคำอธิษฐานสำเร็จ",
+        description: "คำอธิษฐานของคุณได้ถูกส่งให้กับชุมชนแล้ว",
       });
       setIsSubmitting(false);
       navigate("/");
@@ -108,8 +108,8 @@ const NewPrayer = () => {
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <div>
-            <h1 className="text-3xl font-serif font-bold">Share Your Prayer</h1>
-            <p className="text-muted-foreground">Let our community join you in prayer</p>
+            <h1 className="text-3xl font-serif font-bold">แบ่งปันคำอธิษฐาน</h1>
+            <p className="text-muted-foreground">ให้ชุมชนของเราร่วมอธิษฐานกับคุณ</p>
           </div>
         </div>
 
@@ -118,7 +118,7 @@ const NewPrayer = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Heart className="w-5 h-5 text-primary" />
-                Prayer Request Details
+                รายละเอียดคำอธิษฐาน
               </CardTitle>
             </CardHeader>
             
@@ -127,11 +127,11 @@ const NewPrayer = () => {
                 {/* Title */}
                 <div className="space-y-2">
                   <Label htmlFor="title" className="text-base font-medium">
-                    Prayer Title *
+                    หัวข้อคำอธิษฐาน *
                   </Label>
                   <Input
                     id="title"
-                    placeholder="Brief, meaningful title for your prayer request"
+                    placeholder="หัวข้อสั้นๆ ที่มีความหมายสำหรับคำอธิษฐานของคุณ"
                     value={formData.title}
                     onChange={(e) => updateFormData("title", e.target.value)}
                     className="bg-background/50 border-border/50 text-base"
@@ -141,11 +141,11 @@ const NewPrayer = () => {
                 {/* Description */}
                 <div className="space-y-2">
                   <Label htmlFor="description" className="text-base font-medium">
-                    Prayer Description *
+                    รายละเอียดคำอธิษฐาน *
                   </Label>
                   <Textarea
                     id="description"
-                    placeholder="Share more details about your prayer request. Be as specific as you're comfortable with..."
+                    placeholder="แบ่งปันรายละเอียดเพิ่มเติมเกี่ยวกับคำอธิษฐานของคุณ เปิดใจเท่าที่คุณสบายใจ..."
                     value={formData.description}
                     onChange={(e) => updateFormData("description", e.target.value)}
                     className="bg-background/50 border-border/50 min-h-32 text-base"
@@ -160,11 +160,11 @@ const NewPrayer = () => {
                   <div className="space-y-2">
                     <Label className="text-base font-medium flex items-center gap-2">
                       <Tag className="w-4 h-4" />
-                      Category
+                      หมวดหมู่
                     </Label>
                     <Select onValueChange={(value) => updateFormData("category", value)}>
                       <SelectTrigger className="bg-background/50 border-border/50">
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder="เลือกหมวดหมู่" />
                       </SelectTrigger>
                       <SelectContent>
                         {categories.map((category) => (
@@ -179,11 +179,11 @@ const NewPrayer = () => {
                   <div className="space-y-2">
                     <Label className="text-base font-medium flex items-center gap-2">
                       <Users className="w-4 h-4" />
-                      Care Group
+                      กลุ่มดูแล
                     </Label>
                     <Select onValueChange={(value) => updateFormData("careGroup", value)}>
                       <SelectTrigger className="bg-background/50 border-border/50">
-                        <SelectValue placeholder="Select your care group" />
+                        <SelectValue placeholder="เลือกกลุ่มดูแลของคุณ" />
                       </SelectTrigger>
                       <SelectContent>
                         {careGroups.map((group) => (
@@ -200,7 +200,7 @@ const NewPrayer = () => {
                 <div className="space-y-4 p-4 bg-muted/30 rounded-lg border border-border/50">
                   <h3 className="font-medium flex items-center gap-2">
                     <Shield className="w-4 h-4" />
-                    Prayer Settings
+                    การตั้งค่าคำอธิษฐาน
                   </h3>
                   
                   <div className="space-y-4">
@@ -210,10 +210,10 @@ const NewPrayer = () => {
                         <AlertTriangle className="w-4 h-4 text-orange-500" />
                         <div>
                           <Label htmlFor="urgent" className="font-medium">
-                            Mark as Urgent
+                            ระบุเป็นเร่งด่วน
                           </Label>
                           <p className="text-sm text-muted-foreground">
-                            Urgent requests are prioritized in the community feed
+                            คำอธิษฐานเร่งด่วนจะได้รับความสำคัญในฟีดชุมชน
                           </p>
                         </div>
                       </div>
@@ -230,10 +230,10 @@ const NewPrayer = () => {
                         <EyeOff className="w-4 h-4 text-blue-500" />
                         <div>
                           <Label htmlFor="private" className="font-medium">
-                            Private to Care Group
+                            เฉพาะกลุ่มดูแล
                           </Label>
                           <p className="text-sm text-muted-foreground">
-                            Only visible to members of your care group
+                            มองเห็นได้เฉพาะสมาชิกในกลุ่มดูแลของคุณ
                           </p>
                         </div>
                       </div>
@@ -250,10 +250,10 @@ const NewPrayer = () => {
                         <Eye className="w-4 h-4 text-green-500" />
                         <div>
                           <Label htmlFor="anonymous" className="font-medium">
-                            Submit Anonymously
+                            ส่งแบบไม่ระบุชื่อ
                           </Label>
                           <p className="text-sm text-muted-foreground">
-                            Your name won't be shown with this request
+                            ชื่อของคุณจะไม่แสดงในคำขอนี้
                           </p>
                         </div>
                       </div>
@@ -269,7 +269,7 @@ const NewPrayer = () => {
                 {/* Selected Options Preview */}
                 {(formData.category || formData.careGroup || formData.isUrgent || formData.isPrivate || formData.isAnonymous) && (
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium">Preview:</Label>
+                    <Label className="text-sm font-medium">ตัวอย่าง:</Label>
                     <div className="flex flex-wrap gap-2">
                       {formData.category && (
                         <Badge variant="outline">{formData.category}</Badge>
@@ -278,13 +278,13 @@ const NewPrayer = () => {
                         <Badge variant="secondary">{formData.careGroup}</Badge>
                       )}
                       {formData.isUrgent && (
-                        <Badge variant="destructive">Urgent</Badge>
+                        <Badge variant="destructive">เร่งด่วน</Badge>
                       )}
                       {formData.isPrivate && (
-                        <Badge className="bg-blue-500 hover:bg-blue-600">Private</Badge>
+                        <Badge className="bg-blue-500 hover:bg-blue-600">ส่วนตัว</Badge>
                       )}
                       {formData.isAnonymous && (
-                        <Badge className="bg-green-500 hover:bg-green-600">Anonymous</Badge>
+                        <Badge className="bg-green-500 hover:bg-green-600">ไม่ระบุชื่อ</Badge>
                       )}
                     </div>
                   </div>
@@ -298,7 +298,7 @@ const NewPrayer = () => {
                     className="flex-1"
                     onClick={() => navigate(-1)}
                   >
-                    Cancel
+                    ยกเลิก
                   </Button>
                   <Button
                     type="submit"
@@ -314,7 +314,7 @@ const NewPrayer = () => {
                     ) : (
                       <>
                         <Send className="w-4 h-4" />
-                        Share Prayer
+                        แบ่งปันคำอธิษฐาน
                       </>
                     )}
                   </Button>

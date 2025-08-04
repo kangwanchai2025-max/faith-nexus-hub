@@ -29,48 +29,48 @@ import {
 const members = [
   {
     id: 1,
-    name: "Michael Chen",
-    email: "michael.chen@email.com",
-    phone: "+1 (555) 123-4567",
+    name: "สุรศักดิ์ เจริญสุข",
+    email: "surasakc@email.com",
+    phone: "+66 81 234 5678",
     role: "Co-Leader",
     status: "active",
-    joinDate: "Jan 2023",
+    joinDate: "ม.ค. 2023",
     avatar: "/api/placeholder/40/40",
     attendance: 95,
     prayersShared: 23
   },
   {
     id: 2,
-    name: "Jennifer Lopez",
-    email: "jennifer.lopez@email.com",
-    phone: "+1 (555) 987-6543",
+    name: "อรุณี ใจดี",
+    email: "arunee.jaideee@email.com",
+    phone: "+66 87 987 6543",
     role: "Member",
     status: "active",
-    joinDate: "Mar 2023",
+    joinDate: "มี.ค. 2023",
     avatar: "/api/placeholder/40/40",
     attendance: 87,
     prayersShared: 15
   },
   {
     id: 3,
-    name: "David Kim",
-    email: "david.kim@email.com",
-    phone: "+1 (555) 456-7890",
+    name: "ประหยัด คิดเก่ง",
+    email: "prayad.kidkeng@email.com",
+    phone: "+66 82 456 7890",
     role: "Member",
     status: "active",
-    joinDate: "Feb 2023",
+    joinDate: "ก.พ. 2023",
     avatar: "/api/placeholder/40/40",
     attendance: 92,
     prayersShared: 31
   },
   {
     id: 4,
-    name: "Emily Rodriguez",
-    email: "emily.rodriguez@email.com",
-    phone: "+1 (555) 321-0987",
+    name: "สมฤทัย โชคดี",
+    email: "somrutai.chokdee@email.com",
+    phone: "+66 89 321 0987",
     role: "Member",
     status: "pending",
-    joinDate: "Dec 2024",
+    joinDate: "ธ.ค. 2024",
     avatar: "/api/placeholder/40/40",
     attendance: 0,
     prayersShared: 0
@@ -78,9 +78,9 @@ const members = [
 ];
 
 const roleOptions = [
-  { value: "leader", label: "Leader", icon: Crown },
-  { value: "co-leader", label: "Co-Leader", icon: Shield },
-  { value: "member", label: "Member", icon: Users }
+  { value: "leader", label: "หัวหน้า", icon: Crown },
+  { value: "co-leader", label: "รองหัวหน้า", icon: Shield },
+  { value: "member", label: "สมาชิก", icon: Users }
 ];
 
 const MemberManagement = () => {
@@ -100,16 +100,16 @@ const MemberManagement = () => {
   const handleInviteMember = () => {
     if (!inviteEmail.trim()) {
       toast({
-        title: "Email Required",
-        description: "Please enter an email address to send the invitation.",
+        title: "จำเป็นต้องมีอีเมล",
+        description: "กรุณากรอกที่อยู่อีเมลเพื่อส่งคำเชิญ",
         variant: "destructive"
       });
       return;
     }
 
     toast({
-      title: "Invitation Sent",
-      description: `Care group invitation sent to ${inviteEmail}`,
+      title: "ส่งคำเชิญแล้ว",
+      description: `ส่งคำเชิญเข้าร่วมกลุ่มดูแลไปยัง ${inviteEmail} แล้ว`,
     });
     setInviteEmail("");
     setIsInviteOpen(false);
@@ -117,15 +117,15 @@ const MemberManagement = () => {
 
   const handleRoleChange = (memberId: number, newRole: string) => {
     toast({
-      title: "Role Updated",
-      description: `Member role has been updated to ${newRole}`,
+      title: "อัปเดตบทบาทแล้ว",
+      description: `บทบาทของสมาชิกถูกอัปเดตเป็น ${newRole} แล้ว`,
     });
   };
 
   const handleRemoveMember = (memberId: number, memberName: string) => {
     toast({
-      title: "Member Removed",
-      description: `${memberName} has been removed from the care group`,
+      title: "นำสมาชิกออกแล้ว",
+      description: `${memberName} ถูกนำออกจากกลุ่มดูแลแล้ว`,
       variant: "destructive"
     });
   };
@@ -136,39 +136,39 @@ const MemberManagement = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-serif font-bold">Member Management</h1>
-            <p className="text-muted-foreground">Manage your care group members and their roles</p>
+            <h1 className="text-3xl font-serif font-bold">จัดการสมาชิก</h1>
+            <p className="text-muted-foreground">จัดการสมาชิกกลุ่มดูแลและบทบาทของพวกเขา</p>
           </div>
           
           <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>
             <DialogTrigger asChild>
               <Button variant="divine" size="default">
                 <UserPlus className="w-4 h-4" />
-                Invite Member
+                เชิญสมาชิก
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Invite New Member</DialogTitle>
+                <DialogTitle>เชิญสมาชิกใหม่</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="invite-email">Email Address</Label>
+                  <Label htmlFor="invite-email">ที่อยู่อีเมล</Label>
                   <Input
                     id="invite-email"
                     type="email"
-                    placeholder="Enter member's email address"
+                    placeholder="กรอกที่อยู่อีเมลของสมาชิก"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                   />
                 </div>
                 <div className="flex gap-3">
                   <Button variant="outline" onClick={() => setIsInviteOpen(false)} className="flex-1">
-                    Cancel
+                    ยกเลิก
                   </Button>
                   <Button variant="divine" onClick={handleInviteMember} className="flex-1">
                     <Send className="w-4 h-4" />
-                    Send Invitation
+                    ส่งคำเชิญ
                   </Button>
                 </div>
               </div>
@@ -182,7 +182,7 @@ const MemberManagement = () => {
             <CardContent className="p-4 text-center">
               <Users className="w-6 h-6 text-blue-500 mx-auto mb-2" />
               <div className="text-2xl font-bold">{members.length}</div>
-              <div className="text-sm text-muted-foreground">Total Members</div>
+              <div className="text-sm text-muted-foreground">สมาชิกทั้งหมด</div>
             </CardContent>
           </Card>
           
@@ -190,7 +190,7 @@ const MemberManagement = () => {
             <CardContent className="p-4 text-center">
               <Shield className="w-6 h-6 text-green-500 mx-auto mb-2" />
               <div className="text-2xl font-bold">{members.filter(m => m.status === 'active').length}</div>
-              <div className="text-sm text-muted-foreground">Active Members</div>
+              <div className="text-sm text-muted-foreground">สมาชิกที่ใช้งาน</div>
             </CardContent>
           </Card>
           
@@ -198,7 +198,7 @@ const MemberManagement = () => {
             <CardContent className="p-4 text-center">
               <Crown className="w-6 h-6 text-purple-500 mx-auto mb-2" />
               <div className="text-2xl font-bold">{members.filter(m => m.role.includes('Leader')).length}</div>
-              <div className="text-sm text-muted-foreground">Leaders</div>
+              <div className="text-sm text-muted-foreground">ผู้นำ</div>
             </CardContent>
           </Card>
           
@@ -208,7 +208,7 @@ const MemberManagement = () => {
               <div className="text-2xl font-bold">
                 {Math.round(members.reduce((acc, m) => acc + m.attendance, 0) / members.length)}%
               </div>
-              <div className="text-sm text-muted-foreground">Avg Attendance</div>
+              <div className="text-sm text-muted-foreground">การเข้าร่วมเฉลี่ย</div>
             </CardContent>
           </Card>
         </div>
@@ -220,7 +220,7 @@ const MemberManagement = () => {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input
-                  placeholder="Search members..."
+                  placeholder="ค้นหาสมาชิก..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -228,12 +228,12 @@ const MemberManagement = () => {
               </div>
               <Select value={selectedRole} onValueChange={setSelectedRole}>
                 <SelectTrigger className="w-full sm:w-48">
-                  <SelectValue placeholder="Filter by role" />
+                  <SelectValue placeholder="กรองตามบทบาท" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Roles</SelectItem>
-                  <SelectItem value="leader">Leaders</SelectItem>
-                  <SelectItem value="member">Members</SelectItem>
+                  <SelectItem value="all">บทบาททั้งหมด</SelectItem>
+                  <SelectItem value="leader">ผู้นำ</SelectItem>
+                  <SelectItem value="member">สมาชิก</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -245,7 +245,7 @@ const MemberManagement = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="w-5 h-5" />
-              Care Group Members ({filteredMembers.length})
+              สมาชิกกลุ่มดูแล ({filteredMembers.length})
             </CardTitle>
           </CardHeader>
           
@@ -266,11 +266,11 @@ const MemberManagement = () => {
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <h3 className="font-semibold">{member.name}</h3>
-                            <Badge 
-                              variant={member.status === 'active' ? 'default' : 'secondary'}
-                              className={member.status === 'pending' ? 'bg-yellow-500 hover:bg-yellow-600' : ''}
-                            >
-                              {member.status}
+                             <Badge 
+                               variant={member.status === 'active' ? 'default' : 'secondary'}
+                               className={member.status === 'pending' ? 'bg-yellow-500 hover:bg-yellow-600' : ''}
+                             >
+                               {member.status === 'active' ? 'ใช้งาน' : 'รอการอนุมัติ'}
                             </Badge>
                           </div>
                           
@@ -287,17 +287,17 @@ const MemberManagement = () => {
                             <span className="hidden sm:block">•</span>
                             <div className="flex items-center gap-1">
                               <Calendar className="w-3 h-3" />
-                              <span>Joined {member.joinDate}</span>
+                              <span>เข้าร่วมเมื่อ {member.joinDate}</span>
                             </div>
                           </div>
                           
                           <div className="flex items-center gap-4 mt-2">
-                            <span className="text-sm text-muted-foreground">
-                              Attendance: {member.attendance}%
-                            </span>
-                            <span className="text-sm text-muted-foreground">
-                              Prayers: {member.prayersShared}
-                            </span>
+                             <span className="text-sm text-muted-foreground">
+                               การเข้าร่วม: {member.attendance}%
+                             </span>
+                             <span className="text-sm text-muted-foreground">
+                               คำอธิษฐาน: {member.prayersShared}
+                             </span>
                           </div>
                         </div>
                       </div>
