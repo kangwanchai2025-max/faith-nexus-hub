@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import type { User } from '@supabase/supabase-js';
 import { 
   Heart, 
   Users, 
@@ -32,6 +34,11 @@ interface PrayerFormData {
   isAnonymous: boolean;
 }
 
+interface CareGroup {
+  id: string;
+  name: string;
+}
+
 const categories = [
   "สุขภาพและการรักษา",
   "ครอบครัว",
@@ -45,21 +52,13 @@ const categories = [
   "อื่นๆ"
 ];
 
-const careGroups = [
-  "กลุ่มคนหนุ่มสาว",
-  "กลุ่มครอบครัว",
-  "กลุ่มผู้ทำงาน",
-  "กลุ่มผู้สูงอายุ",
-  "กลุ่มนักเรียน",
-  "กลุ่มสมาชิกใหม่",
-  "กลุ่มผู้ชาย",
-  "กลุ่มผู้หญิง"
-];
 
 const NewPrayer = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [careGroups, setCareGroups] = useState<CareGroup[]>([]);
   const [formData, setFormData] = useState<PrayerFormData>({
     title: "",
     description: "",
@@ -70,8 +69,55 @@ const NewPrayer = () => {
     isAnonymous: false
   });
 
+  // Fetch care groups
+  const fetchCareGroups = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('care_groups')
+        .select('id, name')
+        .order('name');
+
+      if (error) throw error;
+      setCareGroups(data || []);
+    } catch (error) {
+      console.error('Error fetching care groups:', error);
+    }
+  };
+
+  // Auth and data loading
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+        if (!session?.user) {
+          navigate("/auth");
+        }
+      }
+    );
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (!session?.user) {
+        navigate("/auth");
+      }
+    });
+
+    fetchCareGroups();
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!user) {
+      toast({
+        title: "กรุณาเข้าสู่ระบบ",
+        description: "คุณต้องเข้าสู่ระบบก่อนแบ่งปันคำอธิษฐาน",
+        variant: "destructive"
+      });
+      return;
+    }
     
     if (!formData.title.trim() || !formData.description.trim()) {
       toast({
@@ -84,15 +130,37 @@ const NewPrayer = () => {
 
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const { error } = await supabase
+        .from('prayers')
+        .insert({
+          user_id: user.id,
+          title: formData.title.trim(),
+          description: formData.description.trim(),
+          category: formData.category || null,
+          care_group_id: formData.careGroup || null,
+          is_urgent: formData.isUrgent,
+          is_private: formData.isPrivate,
+          is_anonymous: formData.isAnonymous
+        });
+
+      if (error) throw error;
+
       toast({
         title: "ส่งคำอธิษฐานสำเร็จ",
         description: "คำอธิษฐานของคุณได้ถูกส่งให้กับชุมชนแล้ว",
       });
-      setIsSubmitting(false);
+      
       navigate("/");
-    }, 1500);
+    } catch (error: any) {
+      toast({
+        title: "เกิดข้อผิดพลาด",
+        description: error.message || "ไม่สามารถส่งคำอธิษฐานได้",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const updateFormData = (field: keyof PrayerFormData, value: any) => {
@@ -187,8 +255,8 @@ const NewPrayer = () => {
                       </SelectTrigger>
                       <SelectContent>
                         {careGroups.map((group) => (
-                          <SelectItem key={group} value={group}>
-                            {group}
+                          <SelectItem key={group.id} value={group.id}>
+                            {group.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -275,7 +343,9 @@ const NewPrayer = () => {
                         <Badge variant="outline">{formData.category}</Badge>
                       )}
                       {formData.careGroup && (
-                        <Badge variant="secondary">{formData.careGroup}</Badge>
+                        <Badge variant="secondary">
+                          {careGroups.find(g => g.id === formData.careGroup)?.name}
+                        </Badge>
                       )}
                       {formData.isUrgent && (
                         <Badge variant="destructive">เร่งด่วน</Badge>

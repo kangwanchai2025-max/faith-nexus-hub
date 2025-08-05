@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { supabase } from "@/integrations/supabase/client";
+import type { User } from '@supabase/supabase-js';
+import { useToast } from "@/hooks/use-toast";
 import { 
   Heart, 
   Users, 
@@ -73,6 +77,64 @@ const careGroupMembers = [
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("overview");
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  // Fetch user profile data
+  const fetchProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error) throw error;
+      setProfile(data);
+    } catch (error: any) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
+  // Auth state management
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          fetchProfile(session.user.id);
+        } else {
+          navigate("/auth");
+        }
+        setIsLoading(false);
+      }
+    );
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        navigate("/auth");
+      }
+      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-subtle flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-pulse">กำลังโหลด...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
@@ -86,9 +148,9 @@ const Profile = () => {
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
               <div className="relative">
                 <Avatar className="w-24 h-24 border-4 border-white/20 shadow-glow">
-                  <AvatarImage src={userData.avatar} alt={userData.name} />
+                  <AvatarImage src={profile?.avatar_url} alt={profile?.display_name || user?.email} />
                   <AvatarFallback className="text-2xl bg-white/20 text-primary-foreground">
-                    {userData.name.split(' ').map(n => n[0]).join('')}
+                    {profile?.display_name ? profile.display_name.split(' ').map((n: string) => n[0]).join('') : user?.email?.[0]?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-primary-glow rounded-full flex items-center justify-center">
@@ -99,7 +161,9 @@ const Profile = () => {
               <div className="flex-1">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div>
-                    <h1 className="text-3xl font-serif font-bold mb-2">{userData.name}</h1>
+                    <h1 className="text-3xl font-serif font-bold mb-2">
+                      {profile?.display_name || `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim() || user?.email}
+                    </h1>
                     <div className="flex flex-wrap items-center gap-3 mb-3">
                       <Badge variant="secondary" className="bg-white/20 text-primary-foreground hover:bg-white/30">
                         <Shield className="w-3 h-3 mr-1" />
@@ -112,10 +176,13 @@ const Profile = () => {
                     </div>
                     <div className="flex items-center gap-2 text-primary-foreground/80">
                       <MapPin className="w-4 h-4" />
-                      <span>{userData.location}</span>
+                      <span>{user?.email}</span>
                       <span className="mx-2">•</span>
                       <Calendar className="w-4 h-4" />
-                      <span>เข้าร่วม {userData.joinDate}</span>
+                      <span>เข้าร่วม {profile?.created_at ? new Date(profile.created_at).toLocaleDateString('th-TH', {
+                        year: 'numeric',
+                        month: 'long'
+                      }) : 'ไม่ทราบ'}</span>
                     </div>
                   </div>
                   

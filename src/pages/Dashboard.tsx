@@ -21,46 +21,25 @@ import {
 import heroImage from "@/assets/hero-prayer.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from '@supabase/supabase-js';
+import { useToast } from "@/hooks/use-toast";
 
-// Sample prayer data
-const prayers = [
-  {
-    id: 1,
-    title: "การรักษาสำหรับการฟื้นตัวของซาร่าห์",
-    description: "โปรดอธิษฐานเพื่อซาร่าห์ขณะที่เธอฟื้นตัวจากการผ่าตัด ขอให้พระเจ้าทรงสัมผัสด้วยการรักษาและการฟื้นตัวอย่างรวดเร็ว",
-    author: "ไมเคิล เฉิน",
-    careGroup: "เยาวชน",
-    timestamp: "2 ชั่วโมงที่แล้ว",
-    category: "สุขภาพและการรักษา",
-    urgent: true,
-    prayerCount: 23,
-    comments: 8
-  },
-  {
-    id: 2,
-    title: "ขอสติปัญญาในการตัดสินใจเรื่องงาน",
-    description: "ขอการนำทางจากพระเจ้าขณะที่ฉันพิจารณาโอกาสงานใหม่ อธิษฐานขอความชัดเจนและสติปัญญาในการตัดสินใจนี้",
-    author: "เจนนิเฟอร์ โลเปซ",
-    careGroup: "ผู้ทำงาน",
-    timestamp: "4 ชั่วโมงที่แล้ว",
-    category: "การนำทาง",
-    urgent: false,
-    prayerCount: 15,
-    comments: 5
-  },
-  {
-    id: 3,
-    title: "การคืนดีในครอบครัว",
-    description: "ครอบครัวของฉันกำลังประสบปัญหาในช่วงยากลำบาก โปรดอธิษฐานเพื่อการให้อภัย ความเข้าใจ และการฟื้นฟูความสัมพันธ์ของเรา",
-    author: "เดวิด คิม",
-    careGroup: "ครอบครัว",
-    timestamp: "6 ชั่วโมงที่แล้ว",
-    category: "ครอบครัว",
-    urgent: false,
-    prayerCount: 31,
-    comments: 12
-  }
-];
+interface Prayer {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  is_urgent: boolean;
+  is_private: boolean;
+  is_anonymous: boolean;
+  created_at: string;
+  profiles?: {
+    display_name: string;
+  };
+  care_groups?: {
+    name: string;
+  };
+  prayer_responses?: any[];
+}
 
 const quickActions = [
   { icon: Heart, label: "แบ่งปันคำอธิษฐาน", color: "text-pink-500" },
@@ -73,7 +52,40 @@ const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [prayers, setPrayers] = useState<Prayer[]>([]);
+  const [isLoadingPrayers, setIsLoadingPrayers] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  // Fetch prayers from database
+  const fetchPrayers = async () => {
+    if (!user) return;
+    
+    setIsLoadingPrayers(true);
+    try {
+      const { data, error } = await supabase
+        .from('prayers')
+        .select(`
+          *,
+          profiles:user_id (display_name),
+          care_groups:care_group_id (name),
+          prayer_responses (id)
+        `)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (error) throw error;
+      setPrayers(data || []);
+    } catch (error: any) {
+      toast({
+        title: "เกิดข้อผิดพลาด",
+        description: "ไม่สามารถโหลดคำอธิษฐานได้",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoadingPrayers(false);
+    }
+  };
 
   // Auth state management
   useEffect(() => {
@@ -104,6 +116,13 @@ const Dashboard = () => {
 
     return () => subscription.unsubscribe();
   }, [navigate]);
+
+  // Fetch prayers when user is available
+  useEffect(() => {
+    if (user) {
+      fetchPrayers();
+    }
+  }, [user]);
 
   if (isLoading) {
     return (
@@ -154,14 +173,27 @@ const Dashboard = () => {
       <div className="container mx-auto px-6 py-8">
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 -mt-16 relative z-10">
-          {quickActions.map((action, index) => (
-            <Card key={index} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-divine transition-all duration-300 hover:scale-105">
-              <CardContent className="p-6 text-center">
-                <action.icon className={`w-8 h-8 mx-auto mb-3 ${action.color}`} />
-                <h3 className="font-semibold">{action.label}</h3>
-              </CardContent>
-            </Card>
-          ))}
+          <Card className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-divine transition-all duration-300 hover:scale-105 cursor-pointer"
+                onClick={() => navigate("/new-prayer")}>
+            <CardContent className="p-6 text-center">
+              <Heart className="w-8 h-8 mx-auto mb-3 text-pink-500" />
+              <h3 className="font-semibold">แบ่งปันคำอธิษฐาน</h3>
+            </CardContent>
+          </Card>
+          <Card className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-divine transition-all duration-300 hover:scale-105 cursor-pointer"
+                onClick={() => navigate("/groups")}>
+            <CardContent className="p-6 text-center">
+              <Users className="w-8 h-8 mx-auto mb-3 text-blue-500" />
+              <h3 className="font-semibold">เข้าร่วมกลุ่ม</h3>
+            </CardContent>
+          </Card>
+          <Card className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-divine transition-all duration-300 hover:scale-105 cursor-pointer"
+                onClick={() => navigate("/calendar")}>
+            <CardContent className="p-6 text-center">
+              <Calendar className="w-8 h-8 mx-auto mb-3 text-green-500" />
+              <h3 className="font-semibold">การประชุมอธิษฐาน</h3>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Search and Filter */}
@@ -190,64 +222,94 @@ const Dashboard = () => {
             </Badge>
           </div>
 
-          {prayers.map((prayer) => (
-            <Card key={prayer.id} className="bg-card/60 backdrop-blur-sm border-border/50 hover:shadow-peaceful transition-all duration-300">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <CardTitle className="text-lg font-serif">{prayer.title}</CardTitle>
-                      {prayer.urgent && (
-                        <Badge variant="destructive" className="text-xs">
-                          ด่วน
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <UserIcon className="w-3 h-3" />
-                      <span>{prayer.author}</span>
-                      <Separator orientation="vertical" className="h-3" />
-                      <MapPin className="w-3 h-3" />
-                      <span>{prayer.careGroup}</span>
-                      <Separator orientation="vertical" className="h-3" />
-                      <Clock className="w-3 h-3" />
-                      <span>{prayer.timestamp}</span>
-                    </div>
-                  </div>
-                  <Badge variant="outline" className="text-xs">
-                    {prayer.category}
-                  </Badge>
-                </div>
-              </CardHeader>
-              
-              <CardContent>
-                <p className="text-muted-foreground mb-4 leading-relaxed">
-                  {prayer.description}
-                </p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="sm" className="text-primary hover:bg-primary/10">
-                      <Heart className="w-4 h-4" />
-                      <span>{prayer.prayerCount}</span>
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <MessageCircle className="w-4 h-4" />
-                      <span>{prayer.comments}</span>
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Share2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  
-                  <Button size="sm" variant="divine">
-                    <Star className="w-3 h-3" />
-                    อธิษฐาน
-                  </Button>
-                </div>
+          {isLoadingPrayers ? (
+            <div className="text-center py-8">
+              <div className="animate-pulse">กำลังโหลดคำอธิษฐาน...</div>
+            </div>
+          ) : prayers.length === 0 ? (
+            <Card className="bg-card/60 backdrop-blur-sm border-border/50">
+              <CardContent className="p-8 text-center">
+                <Heart className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">ยังไม่มีคำอธิษฐาน</h3>
+                <p className="text-muted-foreground mb-4">เป็นคนแรกที่แบ่งปันคำอธิษฐานกับชุมชน</p>
+                <Button onClick={() => navigate("/new-prayer")} variant="divine">
+                  แบ่งปันคำอธิษฐาน
+                </Button>
               </CardContent>
             </Card>
-          ))}
+          ) : (
+            prayers.map((prayer) => (
+              <Card key={prayer.id} className="bg-card/60 backdrop-blur-sm border-border/50 hover:shadow-peaceful transition-all duration-300">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <CardTitle className="text-lg font-serif">{prayer.title}</CardTitle>
+                        {prayer.is_urgent && (
+                          <Badge variant="destructive" className="text-xs">
+                            ด่วน
+                          </Badge>
+                        )}
+                        {prayer.is_anonymous && (
+                          <Badge variant="secondary" className="text-xs">
+                            ไม่ระบุชื่อ
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <UserIcon className="w-3 h-3" />
+                        <span>{prayer.is_anonymous ? "ไม่ระบุชื่อ" : prayer.profiles?.display_name || "ผู้ใช้"}</span>
+                        {prayer.care_groups && (
+                          <>
+                            <Separator orientation="vertical" className="h-3" />
+                            <MapPin className="w-3 h-3" />
+                            <span>{prayer.care_groups.name}</span>
+                          </>
+                        )}
+                        <Separator orientation="vertical" className="h-3" />
+                        <Clock className="w-3 h-3" />
+                        <span>{new Date(prayer.created_at).toLocaleDateString('th-TH', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric'
+                        })}</span>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="text-xs">
+                      {prayer.category}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                
+                <CardContent>
+                  <p className="text-muted-foreground mb-4 leading-relaxed">
+                    {prayer.description}
+                  </p>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <Button variant="ghost" size="sm" className="text-primary hover:bg-primary/10">
+                        <Heart className="w-4 h-4" />
+                        <span>0</span>
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <MessageCircle className="w-4 h-4" />
+                        <span>{prayer.prayer_responses?.length || 0}</span>
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Share2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    
+                    <Button size="sm" variant="divine">
+                      <Star className="w-3 h-3" />
+                      อธิษฐาน
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
         </div>
       </div>
     </div>
