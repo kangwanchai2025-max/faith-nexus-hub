@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      care_groups: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          leader_id: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          leader_id?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          leader_id?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "care_groups_leader_id_fkey"
+            columns: ["leader_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Database: {
         Row: {
           created_at: string
@@ -26,6 +61,237 @@ export type Database = {
         Update: {
           created_at?: string
           id?: number
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          care_group_id: string | null
+          created_at: string
+          description: string | null
+          end_time: string | null
+          event_type: string | null
+          id: string
+          is_public: boolean | null
+          location: string | null
+          organizer_id: string | null
+          start_time: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          care_group_id?: string | null
+          created_at?: string
+          description?: string | null
+          end_time?: string | null
+          event_type?: string | null
+          id?: string
+          is_public?: boolean | null
+          location?: string | null
+          organizer_id?: string | null
+          start_time: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          care_group_id?: string | null
+          created_at?: string
+          description?: string | null
+          end_time?: string | null
+          event_type?: string | null
+          id?: string
+          is_public?: boolean | null
+          location?: string | null
+          organizer_id?: string | null
+          start_time?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_care_group_id_fkey"
+            columns: ["care_group_id"]
+            isOneToOne: false
+            referencedRelation: "care_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_organizer_id_fkey"
+            columns: ["organizer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_members: {
+        Row: {
+          group_id: string
+          id: string
+          joined_at: string
+          role: string | null
+          user_id: string
+        }
+        Insert: {
+          group_id: string
+          id?: string
+          joined_at?: string
+          role?: string | null
+          user_id: string
+        }
+        Update: {
+          group_id?: string
+          id?: string
+          joined_at?: string
+          role?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "care_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prayer_responses: {
+        Row: {
+          content: string | null
+          created_at: string
+          id: string
+          prayer_id: string
+          response_type: string
+          user_id: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          prayer_id: string
+          response_type: string
+          user_id: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          prayer_id?: string
+          response_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prayer_responses_prayer_id_fkey"
+            columns: ["prayer_id"]
+            isOneToOne: false
+            referencedRelation: "prayers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prayer_responses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prayers: {
+        Row: {
+          care_group_id: string | null
+          category: string | null
+          created_at: string
+          description: string
+          id: string
+          is_anonymous: boolean | null
+          is_private: boolean | null
+          is_urgent: boolean | null
+          status: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          care_group_id?: string | null
+          category?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          is_anonymous?: boolean | null
+          is_private?: boolean | null
+          is_urgent?: boolean | null
+          status?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          care_group_id?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          is_anonymous?: boolean | null
+          is_private?: boolean | null
+          is_urgent?: boolean | null
+          status?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prayers_care_group_id_fkey"
+            columns: ["care_group_id"]
+            isOneToOne: false
+            referencedRelation: "care_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prayers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
