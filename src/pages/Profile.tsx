@@ -186,10 +186,18 @@ const Profile = () => {
                     </div>
                   </div>
                   
-                  <Button variant="secondary" size="sm" className="bg-white/20 text-primary-foreground hover:bg-white/30 border-white/30">
-                    <Edit3 className="w-4 h-4" />
-                    แก้ไขโปรไฟล์
-                  </Button>
+                  <ProfileEditDialog
+                    trigger={
+                      <Button variant="secondary" size="sm" className="bg-white/20 text-primary-foreground hover:bg-white/30 border-white/30">
+                        <Edit3 className="w-4 h-4" />
+                        แก้ไขโปรไฟล์
+                      </Button>
+                    }
+                    profile={profile}
+                    onProfileUpdate={() => {
+                      if (user) fetchProfile(user.id);
+                    }}
+                  />
                 </div>
               </div>
             </div>

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import BibleVerseCard from "@/components/BibleVerseCard";
 import { cn } from "@/lib/utils";
 import { 
   Calendar as CalendarIcon,
@@ -216,6 +217,9 @@ const Calendar = () => {
 
           {/* Selected Date Events */}
           <div className="space-y-6">
+            {/* Bible Verses for Selected Date */}
+            <BibleVerseCard date={selectedDate} />
+            
             <Card className="bg-card/60 backdrop-blur-sm border-border/50">
               <CardHeader>
                 <CardTitle className="text-lg">
