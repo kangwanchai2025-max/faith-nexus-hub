@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import AdminBibleManagement from "@/components/AdminBibleManagement";
+import AdminMemberManagement from "@/components/AdminMemberManagement";
 import { 
   Users, 
   Shield, 
@@ -16,7 +18,9 @@ import {
   UserCheck,
   AlertTriangle,
   Search,
-  Filter
+  Filter,
+  Book,
+  UserCog
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
@@ -250,119 +254,146 @@ const AdminPermissions = () => {
       <div className="container mx-auto px-6 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-serif font-bold mb-2">จัดการสิทธิ์ผู้ใช้</h1>
-          <p className="text-muted-foreground">จัดการบทบาทและสิทธิ์ของสมาชิกในระบบ</p>
+          <h1 className="text-3xl font-serif font-bold mb-2">ระบบจัดการผู้ดูแล</h1>
+          <p className="text-muted-foreground">จัดการสิทธิ์ สมาชิก และเนื้อหาในระบบ</p>
         </div>
 
-        {/* Filters */}
-        <Card className="mb-6 bg-card/60 backdrop-blur-sm border-border/50">
-          <CardContent className="p-6">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="ค้นหาผู้ใช้ด้วยชื่อหรืออีเมล..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-muted-foreground" />
-                <Select value={filterRole} onValueChange={setFilterRole}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="กรองตามบทบาท" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">ทั้งหมด</SelectItem>
-                    <SelectItem value="admin">ผู้ดูแลระบบ</SelectItem>
-                    <SelectItem value="moderator">ผู้ดูแล</SelectItem>
-                    <SelectItem value="member">สมาชิก</SelectItem>
-                    <SelectItem value="no-role">ไม่มีบทบาท</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <Tabs defaultValue="permissions" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="permissions" className="flex items-center gap-2">
+              <Shield className="w-4 h-4" />
+              จัดการสิทธิ์
+            </TabsTrigger>
+            <TabsTrigger value="members" className="flex items-center gap-2">
+              <UserCog className="w-4 h-4" />
+              จัดการสมาชิก
+            </TabsTrigger>
+            <TabsTrigger value="bible" className="flex items-center gap-2">
+              <Book className="w-4 h-4" />
+              จัดการพระคัมภีร์
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Users List */}
-        <div className="grid gap-4">
-          {filteredUsers.map((user) => {
-            const currentRole = user.user_roles[0]?.role || null;
-            const RoleIcon = getRoleIcon(currentRole || '');
-            
-            return (
-              <Card key={user.id} className="bg-card/60 backdrop-blur-sm border-border/50">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <Avatar className="w-12 h-12">
-                        <AvatarImage src={user.profiles?.avatar_url} />
-                        <AvatarFallback>
-                          {user.profiles?.display_name?.charAt(0) || user.email.charAt(0).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      
-                      <div>
-                        <h3 className="font-medium">
-                          {user.profiles?.display_name || `${user.profiles?.first_name || ''} ${user.profiles?.last_name || ''}`.trim() || 'ไม่ระบุชื่อ'}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">{user.email}</p>
-                        <p className="text-xs text-muted-foreground">
-                          เข้าร่วมเมื่อ {new Date(user.created_at).toLocaleDateString('th-TH')}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <RoleIcon className="w-4 h-4" />
-                        <Badge variant={getRoleColor(currentRole || '') as any}>
-                          {currentRole ? getRoleLabel(currentRole) : 'ไม่มีบทบาท'}
-                        </Badge>
-                      </div>
-                      
-                      <Select
-                        value={currentRole || 'member'}
-                        onValueChange={(value) => updateUserRole(user.id, value as any)}
-                      >
-                        <SelectTrigger className="w-40">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="member">สมาชิก</SelectItem>
-                          <SelectItem value="moderator">ผู้ดูแล</SelectItem>
-                          <SelectItem value="admin">ผู้ดูแลระบบ</SelectItem>
-                        </SelectContent>
-                      </Select>
+          <TabsContent value="permissions" className="space-y-6">
+            {/* Filters */}
+            <Card className="bg-card/60 backdrop-blur-sm border-border/50">
+              <CardContent className="p-6">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="ค้นหาผู้ใช้ด้วยชื่อหรืออีเมล..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10"
+                      />
                     </div>
                   </div>
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-4 w-4 text-muted-foreground" />
+                    <Select value={filterRole} onValueChange={setFilterRole}>
+                      <SelectTrigger className="w-40">
+                        <SelectValue placeholder="กรองตามบทบาท" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">ทั้งหมด</SelectItem>
+                        <SelectItem value="admin">ผู้ดูแลระบบ</SelectItem>
+                        <SelectItem value="moderator">ผู้ดูแล</SelectItem>
+                        <SelectItem value="member">สมาชิก</SelectItem>
+                        <SelectItem value="no-role">ไม่มีบทบาท</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Users List */}
+            <div className="grid gap-4">
+              {filteredUsers.map((user) => {
+                const currentRole = user.user_roles[0]?.role || null;
+                const RoleIcon = getRoleIcon(currentRole || '');
+                
+                return (
+                  <Card key={user.id} className="bg-card/60 backdrop-blur-sm border-border/50">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <Avatar className="w-12 h-12">
+                            <AvatarImage src={user.profiles?.avatar_url} />
+                            <AvatarFallback>
+                              {user.profiles?.display_name?.charAt(0) || user.email.charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          
+                          <div>
+                            <h3 className="font-medium">
+                              {user.profiles?.display_name || `${user.profiles?.first_name || ''} ${user.profiles?.last_name || ''}`.trim() || 'ไม่ระบุชื่อ'}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">{user.email}</p>
+                            <p className="text-xs text-muted-foreground">
+                              เข้าร่วมเมื่อ {new Date(user.created_at).toLocaleDateString('th-TH')}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-2">
+                            <RoleIcon className="w-4 h-4" />
+                            <Badge variant={getRoleColor(currentRole || '') as any}>
+                              {currentRole ? getRoleLabel(currentRole) : 'ไม่มีบทบาท'}
+                            </Badge>
+                          </div>
+                          
+                          <Select
+                            value={currentRole || 'member'}
+                            onValueChange={(value) => updateUserRole(user.id, value as any)}
+                          >
+                            <SelectTrigger className="w-40">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="member">สมาชิก</SelectItem>
+                              <SelectItem value="moderator">ผู้ดูแล</SelectItem>
+                              <SelectItem value="admin">ผู้ดูแลระบบ</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+
+            {filteredUsers.length === 0 && (
+              <Card className="bg-card/60 backdrop-blur-sm border-border/50">
+                <CardContent className="p-8 text-center">
+                  <Users className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                  <h3 className="text-lg font-medium mb-2">ไม่พบผู้ใช้</h3>
+                  <p className="text-muted-foreground">ไม่พบผู้ใช้ที่ตรงตามเงื่อนไขการค้นหา</p>
                 </CardContent>
               </Card>
-            );
-          })}
-        </div>
+            )}
 
-        {filteredUsers.length === 0 && (
-          <Card className="bg-card/60 backdrop-blur-sm border-border/50">
-            <CardContent className="p-8 text-center">
-              <Users className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-lg font-medium mb-2">ไม่พบผู้ใช้</h3>
-              <p className="text-muted-foreground">ไม่พบผู้ใช้ที่ตรงตามเงื่อนไขการค้นหา</p>
-            </CardContent>
-          </Card>
-        )}
+            {/* Warning */}
+            <Alert>
+              <AlertTriangle className="h-4 w-4" />
+              <AlertDescription>
+                การเปลี่ยนแปลงสิทธิ์จะมีผลทันที กรุณาใช้ความระมัดระวังในการกำหนดสิทธิ์ผู้ดูแลระบบ
+              </AlertDescription>
+            </Alert>
+          </TabsContent>
 
-        {/* Warning */}
-        <Alert className="mt-6">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            การเปลี่ยนแปลงสิทธิ์จะมีผลทันที กรุณาใช้ความระมัดระวังในการกำหนดสิทธิ์ผู้ดูแลระบบ
-          </AlertDescription>
-        </Alert>
+          <TabsContent value="members">
+            <AdminMemberManagement />
+          </TabsContent>
+
+          <TabsContent value="bible">
+            <AdminBibleManagement />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
